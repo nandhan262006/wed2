@@ -197,7 +197,12 @@ h1 small {
   background: #75511a;
 }
 
-.details,
+.details {
+  text-align: center;
+  padding: 90px 8%;
+  background: var(--paper) url("wedding-frame.jpg") center / cover no-repeat;
+}
+
 .countdown-section,
 .rsvp-section,
 .closing {
@@ -264,9 +269,9 @@ h1 small {
 .event-card {
   max-width: 600px;
   margin: auto;
-  padding: 48px 30px;
-  background: rgba(248,238,226,.8);
-  border: 1px solid rgba(185,138,53,.35);
+  padding: 10px 20px 0;
+  background: transparent;
+  border: none;
   position: relative;
 }
 

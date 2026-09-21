@@ -52,9 +52,6 @@ body {
 .content {
   width: min(650px, 88%);
   margin-top: -2vh;
-  background: #fff9f1;
-  border: 1px solid rgba(185,138,53,.4);
-  box-shadow: 0 20px 60px rgba(64, 39, 22, .16);
   padding: 55px 45px 45px;
 }
 
@@ -82,7 +79,7 @@ body {
 
 h1 {
   margin: 0 auto;
-  font-family: "Great Vibes", cursive;
+  font-family: "Allura", cursive;
   font-weight: 400;
   color: #7d5420;
   line-height: .9;
@@ -605,7 +602,7 @@ h1 small {
 
 .form-success h3 {
   margin: 0;
-  font-family: "Great Vibes", cursive;
+  font-family: "Allura", cursive;
   font-weight: 400;
   font-size: 46px;
   color: #7d5420;
@@ -639,7 +636,7 @@ h1 small {
 }
 
 .closing-script {
-  font-family: "Great Vibes", cursive;
+  font-family: "Allura", cursive;
   color: #7d5420;
   font-size: clamp(34px, 6vw, 54px);
   margin: 20px 0 10px;
@@ -651,7 +648,7 @@ h1 small {
 }
 
 .closing h3 {
-  font-family: "Great Vibes", cursive;
+  font-family: "Allura", cursive;
   color: var(--gold-dark);
   font-size: 38px;
   font-weight: 400;
@@ -709,9 +706,46 @@ footer {
     font-size: 8px;
   }
 
+  .event-card {
+    background: rgba(255, 255, 255, .28);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, .5);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(64, 39, 22, .16);
+    padding: 30px 22px 32px;
+  }
+
+  .venue {
+    margin-bottom: 4px;
+    color: var(--gold-dark);
+    font-weight: 700;
+  }
+
+  .address {
+    margin-bottom: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.8;
+    color: #2e211b;
+  }
+
+  .event-rule {
+    margin: 12px auto;
+  }
+
+  .time {
+    margin: 5px 0 12px;
+  }
+
   .parents-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .parents-grid article {
+    padding: 16px 12px;
   }
 
   .details,

@@ -1,0 +1,8 @@
+{
+  "name": "sahana-krishna-wedding-webpage",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@libsql/client": "^0.15.15"
+  }
+}

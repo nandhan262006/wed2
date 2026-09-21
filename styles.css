@@ -667,6 +667,200 @@ footer {
   color: #674d3b;
 }
 
+/* ---------- Guest list (on-site tabular view, Turso-backed) ---------- */
+
+.guestlist-section {
+  text-align: center;
+  padding: 90px 8%;
+  background: #f2e4d5;
+  border-top: 1px solid rgba(185,138,53,.18);
+}
+
+.guestlist-section h2 {
+  margin: 9px 0 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(34px, 5vw, 50px);
+  font-weight: 500;
+}
+
+.guestlist-sub {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 19px;
+  line-height: 1.5;
+  max-width: 560px;
+  margin: 0 auto 34px;
+  opacity: .85;
+}
+
+.guestlist-card {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 34px 30px 30px;
+  background: rgba(255,249,241,.92);
+  border: 1px solid rgba(185,138,53,.35);
+  box-shadow: 0 18px 50px rgba(125,84,32,.10);
+  text-align: left;
+}
+
+.guestlist-toolbar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.guestlist-auth {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.guestlist-auth input,
+.guestlist-toolbar input[type="search"] {
+  padding: 11px 14px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px;
+  color: var(--ink);
+  background: #fffdf9;
+  border: 1px solid rgba(185,138,53,.4);
+  outline: none;
+  min-width: 220px;
+}
+
+.guestlist-toolbar input[type="search"] {
+  min-width: 260px;
+  flex: 1;
+}
+
+.small-button {
+  padding: 12px 22px;
+  border: none;
+  cursor: pointer;
+  background: var(--gold-dark);
+  color: #fff9f1;
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+}
+
+.small-button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.guestlist-counts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.guestlist-counts div {
+  padding: 14px 8px;
+  text-align: center;
+  border: 1px solid rgba(185,138,53,.28);
+  background: rgba(255,255,255,.5);
+}
+
+.guestlist-counts strong {
+  display: block;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--gold-dark);
+}
+
+.guestlist-counts span {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+}
+
+.guestlist-empty {
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 18px;
+  opacity: .7;
+  margin: 18px 0 6px;
+}
+
+.guestlist-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(185,138,53,.3);
+}
+
+.guestlist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 820px;
+  background: #fffdf9;
+}
+
+.guestlist-table th,
+.guestlist-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(185,138,53,.18);
+  text-align: left;
+  vertical-align: top;
+}
+
+.guestlist-table thead th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--gold-dark);
+  background: rgba(185,138,53,.10);
+  white-space: nowrap;
+}
+
+.guestlist-table tbody tr:nth-child(even) {
+  background: rgba(185,138,53,.05);
+}
+
+.guestlist-table td.nowrap {
+  white-space: nowrap;
+}
+
+.guestlist-table td.center {
+  text-align: center;
+}
+
+.guestlist-table td.msg {
+  max-width: 260px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.pill-yes {
+  background: rgba(142,101,32,.14);
+  color: #75511a;
+  border: 1px solid rgba(142,101,32,.45);
+}
+
+.pill-no {
+  background: rgba(216,137,145,.14);
+  color: #8a2f2f;
+  border: 1px solid rgba(138,47,47,.35);
+}
+
 @media (max-width: 650px) {
   .hero {
     min-height: 820px;
@@ -765,6 +959,24 @@ footer {
 
   .countdown span {
     font-size: 7px;
+  }
+
+  .guestlist-card {
+    padding: 26px 16px 22px;
+  }
+
+  .guestlist-counts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .guestlist-toolbar input[type="search"],
+  .guestlist-auth input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .guestlist-auth {
+    width: 100%;
   }
 
   .rsvp-card {

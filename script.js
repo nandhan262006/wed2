@@ -26,11 +26,8 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// ---------- RSVP → Google Sheets ----------
-// 1. Create a Google Sheet, then Extensions → Apps Script, paste the Code.gs below.
-// 2. Deploy → New deployment → Web app (Execute as: Me, Access: Anyone).
-// 3. Paste the Web App URL here:
-const GOOGLE_SHEET_URL = ""; // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+// ---------- RSVP → Turso (via Vercel /api/rsvp) ----------
+const RSVP_API_URL = "/api/rsvp";
 
 const rsvpForm = document.getElementById("rsvp-form");
 const rsvpError = document.getElementById("rsvp-error");
@@ -76,31 +73,18 @@ if (rsvpForm) {
       name, contact, attendance, guests, side, dietary, message,
     };
 
-    // Always keep a local backup.
+    // Send to Turso via Vercel API (primary store).
     try {
-      const key = "sahana-krishna-rsvps";
-      const existing = JSON.parse(localStorage.getItem(key) || "[]");
-      existing.push(payload);
-      localStorage.setItem(key, JSON.stringify(existing));
-    } catch (_) {
-      /* storage unavailable — still continue */
-    }
-
-    // Send to Google Sheets (Apps Script web app). Uses no-cors + text/plain
-    // to avoid preflight failures on static hosting.
-    if (GOOGLE_SHEET_URL) {
-      try {
-        await fetch(GOOGLE_SHEET_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(payload),
-        });
-      } catch (err) {
-        rsvpSubmit.disabled = false;
-        rsvpSubmit.textContent = "Send RSVP ✦";
-        return showRsvpError("Couldn't reach Google Sheets. Your response was saved locally — please try again or text the families directly.");
-      }
+      const res = await fetch(RSVP_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("API " + res.status);
+    } catch (err) {
+      rsvpSubmit.disabled = false;
+      rsvpSubmit.textContent = "Send RSVP ✦";
+      return showRsvpError("Couldn't save your RSVP — please try again or text the families directly.");
     }
 
     const firstName = name.split(" ")[0];
@@ -117,10 +101,137 @@ if (rsvpForm) {
     rsvpSuccess.hidden = false;
     rsvpSubmit.disabled = false;
     rsvpSubmit.textContent = "Send RSVP ✦";
+
+    // If the guest list is visible, refresh it so the new RSVP appears.
+    if (!document.getElementById("guestlist-wrap").hidden) {
+      loadGuestList();
+    }
   });
 
   rsvpAgain.addEventListener("click", () => {
     rsvpSuccess.hidden = true;
     rsvpForm.reset();
   });
+}
+
+// ---------- On-site tabular guest list (reads from Turso via GET /api/rsvp) ----------
+let guestCache = [];
+
+const guestToken = document.getElementById("guestlist-token");
+const guestLoad = document.getElementById("guestlist-load");
+const guestRefresh = document.getElementById("guestlist-refresh");
+const guestSearch = document.getElementById("guestlist-search");
+const guestBody = document.getElementById("guestlist-body");
+const guestWrap = document.getElementById("guestlist-wrap");
+const guestEmpty = document.getElementById("guestlist-empty");
+const guestError = document.getElementById("guestlist-error");
+const guestCounts = document.getElementById("guestlist-counts");
+
+function showGuestError(message) {
+  guestError.textContent = message;
+  guestError.hidden = false;
+}
+
+function hideGuestError() {
+  guestError.textContent = "";
+  guestError.hidden = true;
+}
+
+function formatDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso).slice(0, 10);
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function attendanceBadge(value) {
+  return value === "accepts"
+    ? '<span class="pill pill-yes">Accepts</span>'
+    : '<span class="pill pill-no">Declines</span>';
+}
+
+function cellText(value) {
+  const s = (value ?? "").toString().trim();
+  return s ? s : "—";
+}
+
+function renderGuestRows() {
+  const q = (guestSearch.value || "").toLowerCase().trim();
+  const rows = guestCache.filter((r) => {
+    if (!q) return true;
+    return [r.name, r.contact, r.message, r.side, r.attendance, r.dietary]
+      .map((v) => (v || "").toString().toLowerCase())
+      .some((v) => v.includes(q));
+  });
+
+  guestBody.innerHTML = rows.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="nowrap">${formatDate(r.timestamp)}</td>
+      <td><strong>${escapeHtml(cellText(r.name))}</strong></td>
+      <td>${escapeHtml(cellText(r.contact))}</td>
+      <td>${attendanceBadge(r.attendance)}</td>
+      <td class="center">${escapeHtml(cellText(r.guests))}</td>
+      <td>${escapeHtml(cellText(r.side))}</td>
+      <td>${escapeHtml(cellText(r.dietary))}</td>
+      <td class="msg">${escapeHtml(cellText(r.message))}</td>
+    </tr>
+  `).join("");
+
+  guestWrap.hidden = rows.length === 0;
+  guestEmpty.hidden = rows.length !== 0 || guestCache.length === 0 ? guestCache.length !== 0 : false;
+  if (guestCache.length === 0) {
+    guestEmpty.hidden = false;
+    guestEmpty.textContent = "No responses yet — be the first to RSVP above.";
+  } else if (rows.length === 0) {
+    guestWrap.hidden = true;
+    guestEmpty.hidden = false;
+    guestEmpty.textContent = "No matches for your search.";
+  } else {
+    guestEmpty.hidden = true;
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+async function loadGuestList() {
+  hideGuestError();
+  guestLoad.disabled = true;
+  guestLoad.textContent = "Loading…";
+
+  try {
+    const token = (guestToken.value || "").trim();
+    const url = token ? `${RSVP_API_URL}?token=${encodeURIComponent(token)}` : RSVP_API_URL;
+    const res = await fetch(url);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || ("HTTP " + res.status));
+    }
+
+    guestCache = data.rsvps || [];
+    document.getElementById("count-total").textContent = data.counts?.total ?? guestCache.length;
+    document.getElementById("count-accepts").textContent = data.counts?.accepts ?? 0;
+    document.getElementById("count-declines").textContent = data.counts?.declines ?? 0;
+    document.getElementById("count-guests").textContent = data.counts?.guestTotal ?? 0;
+
+    guestCounts.hidden = false;
+    guestRefresh.hidden = false;
+    guestSearch.hidden = false;
+    renderGuestRows();
+  } catch (err) {
+    showGuestError("Couldn't load the guest list: " + (err.message || err) + ". Check your database env vars / passcode and try again.");
+  } finally {
+    guestLoad.disabled = false;
+    guestLoad.textContent = "View list";
+  }
+}
+
+if (guestLoad) {
+  guestLoad.addEventListener("click", loadGuestList);
+  guestRefresh.addEventListener("click", loadGuestList);
+  guestSearch.addEventListener("input", renderGuestRows);
 }

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Allura&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="styles.css?v=16">
 </head>
 <body>
   <main class="invitation">
@@ -185,6 +185,56 @@
       </form>
     </section>
 
+    <section class="guestlist-section" id="guestlist">
+      <p class="section-kicker">Guest list</p>
+      <h2>Who's joining us</h2>
+      <div class="divider">✦</div>
+      <p class="guestlist-sub">
+        Live responses stored in our database, shown here in a table.
+        If you set a guest-list passcode on the server, enter it to unlock.
+      </p>
+
+      <div class="guestlist-card">
+        <div class="guestlist-toolbar">
+          <div class="guestlist-auth">
+            <input type="password" id="guestlist-token" placeholder="Passcode (if set)" autocomplete="off">
+            <button type="button" class="small-button" id="guestlist-load">View list</button>
+            <button type="button" class="link-button" id="guestlist-refresh" hidden>Refresh ↻</button>
+          </div>
+          <input type="search" id="guestlist-search" placeholder="Search name, contact, message…" hidden>
+        </div>
+
+        <div class="guestlist-counts" id="guestlist-counts" hidden>
+          <div><strong id="count-total">0</strong><span>Total</span></div>
+          <div><strong id="count-accepts">0</strong><span>Accepts</span></div>
+          <div><strong id="count-declines">0</strong><span>Declines</span></div>
+          <div><strong id="count-guests">0</strong><span>Guests</span></div>
+        </div>
+
+        <p class="form-error" id="guestlist-error" role="alert" hidden></p>
+        <p class="guestlist-empty" id="guestlist-empty">No responses yet — be the first to RSVP above.</p>
+
+        <div class="guestlist-table-wrap" id="guestlist-wrap" hidden>
+          <table class="guestlist-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Attending</th>
+                <th>Guests</th>
+                <th>Side</th>
+                <th>Dietary</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="guestlist-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <section class="closing">
       <div class="closing-ornament">❧ ❧</div>
       <p class="closing-script">Two hearts, one beautiful journey</p>
@@ -198,6 +248,6 @@
     </footer>
   </main>
 
-  <script src="script.js?v=15"></script>
+  <script src="script.js?v=16"></script>
 </body>
 </html>

@@ -67,7 +67,7 @@ export default function GuestList({ refreshKey }: { refreshKey: number }) {
   useEffect(() => {
     if (loaded && refreshKey > 0) void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshKey]);
+  }, [refreshKey, loaded]);
 
   return (
     <div className="guestlist-card">

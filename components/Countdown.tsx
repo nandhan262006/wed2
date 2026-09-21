@@ -3,44 +3,49 @@
 import { useEffect, useState } from "react";
 import { WEDDING_TIMESTAMP } from "@/lib/wedding";
 
-function getParts(target: number) {
+type Parts = { days: number; hours: number; minutes: number; seconds: number };
+
+function getParts(target: number): Parts {
   const distance = target - Date.now();
-  if (distance <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, past: true };
+  if (distance <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   return {
     days: Math.floor(distance / (1000 * 60 * 60 * 24)),
     hours: Math.floor(distance / (1000 * 60 * 60)) % 24,
     minutes: Math.floor(distance / (1000 * 60)) % 60,
     seconds: Math.floor(distance / 1000) % 60,
-    past: false,
   };
 }
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 export default function Countdown() {
-  const [t, setT] = useState(() => getParts(WEDDING_TIMESTAMP));
+  // Start with placeholders (like the original static site) so SSR HTML always
+  // matches the first client render — no hydration mismatch from clock skew.
+  const [t, setT] = useState<Parts | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => setT(getParts(WEDDING_TIMESTAMP)), 1000);
+    const update = () => setT(getParts(WEDDING_TIMESTAMP));
+    update();
+    const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, []);
-
-  const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <div className="countdown" role="timer" aria-live="off" aria-label="Countdown to the wedding">
       <div>
-        <strong>{t.days}</strong>
+        <strong>{t ? t.days : "--"}</strong>
         <span>Days</span>
       </div>
       <div>
-        <strong>{pad(t.hours)}</strong>
+        <strong>{t ? pad(t.hours) : "--"}</strong>
         <span>Hours</span>
       </div>
       <div>
-        <strong>{pad(t.minutes)}</strong>
+        <strong>{t ? pad(t.minutes) : "--"}</strong>
         <span>Minutes</span>
       </div>
       <div>
-        <strong>{pad(t.seconds)}</strong>
+        <strong>{t ? pad(t.seconds) : "--"}</strong>
         <span>Seconds</span>
       </div>
     </div>

@@ -14,3 +14,6 @@ out/
 # os / editor
 .DS_Store
 *.pem
+
+# ts
+tsconfig.tsbuildinfo

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import Countdown from "@/components/Countdown";
 import GuestList from "@/components/GuestList";
@@ -13,14 +12,6 @@ export default function HomePage() {
   return (
     <main className="invitation">
       <section className="hero">
-        <Image
-          src="/wedding-frame.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(max-width: 1024px) 100vw, 1024px"
-          className="hero-bg"
-        />
         <div className="ornament top" aria-hidden="true">
           ❧
         </div>
@@ -151,14 +142,6 @@ export default function HomePage() {
       </section>
 
       <section className="closing" aria-label="Closing message">
-        <Image
-          src="/wedding-frame.jpg"
-          alt=""
-          fill
-          sizes="(max-width: 1024px) 100vw, 1024px"
-          className="closing-bg"
-          aria-hidden="true"
-        />
         <div className="closing-ornament" aria-hidden="true">
           ❧ ❧
         </div>

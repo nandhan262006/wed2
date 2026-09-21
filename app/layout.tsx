@@ -27,7 +27,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Sahana & Krishna Teja | Wedding Invitation",
   description: `Wedding invitation of ${WEDDING.bride} and ${WEDDING.groom} — ${WEDDING.dateDisplay}, Austin, Texas. Muhurtham 6:58 PM at ${WEDDING.venue}.`,
-  metadataBase: new URL("https://sahana-krishna-wedding-webpage.vercel.app"),
+  metadataBase: new URL("https://wed2-five.vercel.app"),
   openGraph: {
     title: "Sahana & Krishna Teja — Wedding Invitation",
     description: `Together with their families, joyfully invite you — ${WEDDING.dateDisplay}, ${WEDDING.venue}, Liberty Hill, Texas.`,
